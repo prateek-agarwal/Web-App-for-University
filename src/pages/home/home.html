@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Home</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content >
+  <input #userid placeholder="Enrolment number">
+  <button (click)="loadPeople(userid.value)">View Data </button>
+
+  <ion-list *ngIf="people">
+    <li> Name: {{ people.name }} </li>
+    <li> Enrollment: {{ people.id }} </li>
+  </ion-list>
+</ion-content>
