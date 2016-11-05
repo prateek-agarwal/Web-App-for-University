@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Gatepass } from '../../classes/gatepass';
 import { Student } from '../../classes/student';
-import { UserService } from '../../providers/user-service';
+import { GatepassService } from '../../providers/gatepass-service';
 import { LocalGatepass } from '../local-gatepass/local-gatepass';
 import { OutstationGatepass } from '../outstation-gatepass/outstation-gatepass';
+
 
 /*
   Generated class for the GatepassStep1 page.
@@ -20,12 +21,15 @@ export class GatepassStep1 {
   student: Student;
   gatepass: Gatepass;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gatepassService: GatepassService) {
     this.student = navParams.get('student');
   }
 
   ionViewDidLoad() {
     console.log('Hello GatepassStep1 Page');
+
+    // Call a getPreAplly, to get all details weather gatepass can be applied or not.
+    this.gatepassService.getPreApply();
   }
 
   localGatepass() {

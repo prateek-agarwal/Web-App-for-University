@@ -51,21 +51,34 @@ export class GatepassService {
 
   }
 
-  checkStatus(email_id: string, api_key: string) {
+  checkStatus(email_id: string, api_key: string): Observable<any> {
     let request_url = this.url + '/checkStatus';
 
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization': api_key });
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'authorization': api_key });
     let options = new RequestOptions({ headers: headers });
 
     this.body = "email_id=" + email_id;
-    return this.http.put(request_url, this.body, options)
+    return this.http.post(request_url, this.body, options)
                     .map(this.extractData).
                     catch(this.handleError);
 
   }
 
+  getPreApply(email_id: string, api_key: string): Observable<any> {
+    let request_url = this.url + '/getPreApply';
+
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'authorization': api_key });
+    let options = new RequestOptions({ headers: headers });
+
+    this.body = "email_id=" + email_id;
+    return this.http.post(request_url, this.body, options)
+                    .map(this.extractData).
+                    catch(this.handleError);
+  }
+
   private extractData(res: Response) {
       let body = res.json();
+      console.log("Body here returned:", JSON.stringify(body));
       return body.data || { };
     }
 
@@ -73,13 +86,14 @@ export class GatepassService {
     // In a real world app, we might use a remote logging infrastructure
     let errMsg: string;
     if (error instanceof Response) {
+
       const body = error.json() || '';
       const err = body.error || JSON.stringify(body);
+
       errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
-    console.error(errMsg);
     return Observable.throw(errMsg);
   }
 }

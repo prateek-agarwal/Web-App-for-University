@@ -89,13 +89,13 @@ function authenticateStudent(\Slim\Route $route)
     $app = \Slim\Slim::getInstance();
 
     //Verifying the headers
-    if (isset($headers['Authorization'])) {
+    if (isset($headers['authorization'])) {
 
         //Creating a DatabaseOperation boject
         $db = new DbOperation();
 
         //Getting api key from header
-        $api_key = $headers['Authorization'];
+        $api_key = $headers['authorization'];
 
         //Validating apikey from database
         if (!$db->isValidStudent($api_key)) {
@@ -202,7 +202,7 @@ $app->post('/getAPIKey',function() use ($app){
     echoResponse(200,$response);
 });
 
-$app->put('/checkStatus', 'authenticateStudent', function () use ($app) {
+$app->post('/checkStatus', 'authenticateStudent', function () use ($app) {
 
     //Verifying the required parameters
     verifyRequiredParams(array('email_id'));
@@ -211,42 +211,61 @@ $app->put('/checkStatus', 'authenticateStudent', function () use ($app) {
     $response = array();
 
     //reading post parameters
-    $email_id = $app->request->put('email_id');
+    $email_id = $app->request->post('email_id');
 
     //Creating a DbOperation object
     $db = new DbOperation();
 
     
-    $res = $db->registerAPI($email_id);
+    $gatepass = $db->getGatepassStatus($email_id);
 
-    //If the result returned is 0 means success
-    if ($res == 0) {
-        //Making the response error false
-        $response["error"] = false;
-        //Adding a success message
-        $response['data'] = array(
-          "message"=> "User registered, password sent to registered email"
-        );
-        //Displaying response
-        echoResponse(201, $response);
-
-    //If the result returned is 1 means failure
-    } else if ($res == 1) {
-        $response["error"] = true;
-        $response['data'] = array(
-          "message"=> "Oops! you are not a valid student"
-        );
-        echoResponse(200, $response);
-
-    //If the result returned is 2 means user already exist
-    } else if ($res == 2) {
-        $response["error"] = true;
-        $response['data'] = array(
-          "message"=> "Sorry, you are already registered"
-        );
-        echoResponse(200, $response);
+    if (isset($gatepass)) {
+        $response['error'] = false;
+        $response['data'] = json_encode($gatepass);
     }
+
+    else {
+        $response['error'] = false;
+        $response['message'] = "Gatepass doesn't exist Or Invalid student";
+    }
+
+
+    //Displaying the response
+    echoResponse(200,$response);
 });
+
+$app->post('/getPreApply', 'authenticateStudent', function () use ($app) {
+
+    //Verifying the required parameters
+    verifyRequiredParams(array('email_id'));
+
+    //Creating a response array
+    $response = array();
+
+    //reading post parameters
+    $email_id = $app->request->post('email_id');
+
+    //Creating a DbOperation object
+    $db = new DbOperation();
+
+    
+    $preApply = $db->getPreApply($email_id);
+
+    if (isset($preApply)) {
+        $response['error'] = false;
+        $response['data'] = $preApply;
+    }
+
+    else {
+        $response['error'] = false;
+        $response['message'] = "Invalid student";
+    }
+
+
+    //Displaying the response
+    echoResponse(200,$response);
+});
+
 
 $app->get('/student/:user_id', 'authenticateStudent', function($user_id) use ($app){
     //verifying required parameters

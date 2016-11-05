@@ -15,17 +15,18 @@
 
 <ion-content padding>
 
-  <ion-card>
+  <ion-card *ngIf="gatepass">
 
     <ion-card-header>
-      Title
+      {{gatepass.purpose}}
     </ion-card-header>
 
     <ion-card-content>
       <ion-list>
-        <li>Out Time</li>
-        <li>In Time</li>
-        <li>Status</li>
+        <li>From Date - {{gatepass.from_date}}</li>
+        <li>From Time - {{gatepass.from_time}}</li>
+        <li>To Date - {{gatepass.to_date}}</li>
+        <li>Status - {{gatepass.status}}</li>
       </ion-list>
     </ion-card-content>
 

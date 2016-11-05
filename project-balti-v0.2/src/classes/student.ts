@@ -1,5 +1,10 @@
 import { Gatepass } from './gatepass';
 import { GatepassService } from '../providers/gatepass-service';
+import { Observable }     from 'rxjs/Observable';
+import 'rxjs/add/operator/map';
+
+import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/catch';
 
 export class Student {
   // TODO make everything except api key private.
@@ -14,7 +19,6 @@ export class Student {
     this.email_id = email_id;
     this.api_key = api_key;
   }
-
 
   getTimetable() {
 
@@ -40,8 +44,4 @@ export class Student {
 
   }
 
-  checkGatepassStatus(gatepassService: GatepassService) {
-
-    gatepassService.checkStatus(this.email_id, this.api_key);
-  }
 }

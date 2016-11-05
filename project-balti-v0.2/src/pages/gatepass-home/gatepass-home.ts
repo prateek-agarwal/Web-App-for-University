@@ -20,21 +20,12 @@ export class GatepassHome {
 
 
   public student: any;
-  public gatepass: Gatepass;
+  public gatepass: any;
 
   constructor(public navCtrl: NavController,
     private userService: UserService,
     public gatepassService: GatepassService) {
-      this.userService.getUser().then(s => {
-        if (s != null) {
-          this.student = s;
-        }
-        else {
-          // Navigate back to login page.
-          // TODO
-          navCtrl.setRoot(Login);
-        }
-      });
+
   }
 
   ionViewDidLoad() {
@@ -43,8 +34,27 @@ export class GatepassHome {
     // TODO
     // Check for internet connection, without that this module won't work.
 
-    this.student.checkGatepassStatus(this.gatepassService);
+    this.userService.getUser().then(s => {
+        if (s != null) {
+          this.student = s;
+          console.log('This is the class', JSON.stringify(this.student));
 
+          this.gatepassService.checkStatus(this.student.email_id, this.student.api_key)
+          .subscribe(
+            data => {
+              this.gatepass = JSON.parse(data);
+            }
+            // error => this.msg = <any>error
+          );
+
+        }
+        else {
+          // Navigate back to login page.
+          // TODO
+          this.navCtrl.setRoot(Login);
+        }
+      },
+      error => console.log('Error reading data'));
   }
 
   applyGatepass() {
