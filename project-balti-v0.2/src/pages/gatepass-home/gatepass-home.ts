@@ -42,7 +42,8 @@ export class GatepassHome {
           this.gatepassService.checkStatus(this.student.email_id, this.student.api_key)
           .subscribe(
             data => {
-              this.gatepass = JSON.parse(data);
+              this.gatepass = data;
+              console.log("Gatepass Object: ", JSON.stringify(this.gatepass));
             }
             // error => this.msg = <any>error
           );

@@ -221,7 +221,7 @@ $app->post('/checkStatus', 'authenticateStudent', function () use ($app) {
 
     if (isset($gatepass)) {
         $response['error'] = false;
-        $response['data'] = json_encode($gatepass);
+        $response['data'] = $gatepass;
     }
 
     else {

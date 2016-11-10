@@ -112,7 +112,7 @@ class DbOperation
     }
 
     public function getGatepassStatus($email_id) {
-        if ($this->isStudentExists($email_id)) {
+        if ($this->isStudentExists($email_id) == TRUE) {
             if ($this->isRegisteredForAPI($email_id)) {
                 $stmt = $this->con->prepare("SELECT user_id FROM gps_api WHERE email_id=?");
                 $stmt->bind_param("s", $email_id);
@@ -123,7 +123,7 @@ class DbOperation
                 
                 
                 $stmt = $this->con->prepare("SELECT * FROM gps_gatepassmaster WHERE user_id=? ORDER BY applied_date DESC, applied_time DESC");
-                $stmt->bind_param("s", $user_id[0]);
+                $stmt->bind_param("s", $user_id['user_id']);
                 $stmt->execute();
                 $res = $stmt->get_result();
                 $gatepass = $res->fetch_assoc();
@@ -467,7 +467,7 @@ class DbOperation
     //Checking whether a student already exist
     private function isStudentExists($email_id) {
 
-        $stmt = $this->con->prepare("SELECT name, user_id, email_id from gps_usersmaster WHERE email_id = ?");
+        $stmt = $this->con->prepare("SELECT * from gps_usersmaster WHERE email_id=?");
         $stmt->bind_param('s', $email_id);
         $stmt->execute();
         $stmt->store_result();

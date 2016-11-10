@@ -85,7 +85,6 @@ private extractPreApply(res: Response) {
 
   private extractData(res: Response) {
       let body = res.json();
-      console.log("Body here returned:", JSON.stringify(body));
       return body.data || { };
     }
 
