@@ -294,19 +294,19 @@ $app->put('/applyGatepass', 'authenticateStudent', function() use($app){
     
     $res = $db->ApplyGatepass($gatepass_data);
 
-    if (isset($preApply)) {
+    if ($res == 0) {
         $response['error'] = false;
-        $response['data'] = $preApply;
+        $response['data'] = array('message' => "Gatepass Applied");
     }
 
     else {
         $response['error'] = false;
-        $response['message'] = "Invalid student";
+        $response['message'] = "Error applying gatepass";
     }
 
 
     //Displaying the response
-    echoResponse(200,$response);
+    echoResponse(201,$response);
 });
 
 $app->get('/student/:user_id', 'authenticateStudent', function($user_id) use ($app){

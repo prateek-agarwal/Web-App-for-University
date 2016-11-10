@@ -201,20 +201,14 @@ class DbOperation
                 'to_time' => $fixed_details['In Time']['value'],
                 'applied_date' => date('Y-m-d'),
                 'applied_time' => date('H:i:s', $time),
-                'send_approval_to' =>"Kumar Vishal",
+                'send_approval_to' =>"100240",
                 'status' => "AutoApproved",
-                'approved_or_rejected_date' => "0000-00-00",
-                'approved_or_rejected_time' => "00:00:00",
-                'actual_out_date' => "0000-00-00",
-                'actual_out_time' => "00-00-00",
-                'actual_in_date' => "0000-00-00",
-                'actual_in_time' => "00-00-00",
                 'purpose' => "Local Visit",
                 'destination' => "NEEMRANA",
                 'visit_to' => "NEEMRANA",
                 'comments' => "NA"
             );
-
+            
             /* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
             $a_params = array();
             $param_type = 'sissssssssssssssssss';
@@ -222,12 +216,10 @@ class DbOperation
             
             $sql = "INSERT INTO gps_gatepassmaster (user_id, gatepass_type, 
             from_date, from_time, to_date, to_time, applied_date, applied_time, 
-            send_approval_to, status, approved_or_rejected_date, approved_or_rejected_time, 
-            actual_out_date, actual_out_time, actual_in_date, actual_in_time, 
-            purpose,destination,visit_to,comments) VALUES (?,
-            ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
+            send_approval_to, status,purpose,destination,visit_to,comments) VALUES (?,
+            ?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
             $stmt = $this->con->prepare($sql);
-            $stmt->bind_param("sissssssssssssssssss", 
+            $stmt->bind_param("sissssssssssss", 
                 $insert_data['user_id'],
                 $insert_data['gatepass_type'],
                 $insert_data['from_date'],
@@ -238,12 +230,6 @@ class DbOperation
                 $insert_data['applied_time'],
                 $insert_data['send_approval_to'],
                 $insert_data['status'],
-                $insert_data['approved_or_rejected_date'],
-                $insert_data['approved_or_rejected_time'],
-                $insert_data['actual_out_date'],
-                $insert_data['actual_out_time'],
-                $insert_data['actual_in_date'],
-                $insert_data['actual_in_time'],
                 $insert_data['purpose'],
                 $insert_data['destination'],
                 $insert_data['visit_to'],
@@ -253,17 +239,18 @@ class DbOperation
             /* use call_user_func_array, as $stmt->bind_param('s', $param); does not accept params array */
             // call_user_func_array(array($stmt, 'bind_param'), $a_params);
             
-            /* Execute statement */
-            $stmt->execute();
-            
-            /* Fetch result to array */
-            $res = $stmt->get_result();
-            while($row = $res->fetch_array()) {
-                return 0;
-            }
+            //Executing the statment
+              $result = $stmt->execute();
 
-            return 5;
-            
+              //Closing the statment
+              $stmt->close();
+
+              //If statment executed successfully
+              if ($result) {
+                  return 0;
+              } else {
+                  return 5;
+              }
         }
     }
 
@@ -401,8 +388,8 @@ class DbOperation
 
         $i = 0;
         while($row = $res->fetch_assoc()) {
-            if (strtotime($from_date." ".$from_time) <= strtotime($row->from_date." ".$row->from_time)) {
-                if (strtotime($to_date." ".$to_time) >= strtotime($row->to_date." ".$row->to_time)) {
+            if (strtotime($from_date." ".$from_time) <= strtotime($row['from_date']." ".$row['from_time'])) {
+                if (strtotime($to_date." ".$to_time) >= strtotime($row['to_date']." ".$row['to_time'])) {
                     $stmt->close();
                     return TRUE;
                 }
