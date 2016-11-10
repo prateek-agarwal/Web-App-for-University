@@ -61,7 +61,7 @@ export class GatepassHome {
     // Navigate to fill the form.
 
     this.navCtrl.push(GatepassStep1, {
-      student: this.student,
+      student: this.student
     });
   }
 

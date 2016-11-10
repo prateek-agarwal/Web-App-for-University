@@ -266,6 +266,48 @@ $app->post('/getPreApply', 'authenticateStudent', function () use ($app) {
     echoResponse(200,$response);
 });
 
+$app->put('/applyGatepass', 'authenticateStudent', function() use($app){
+    //Verifying the required parameters
+    verifyRequiredParams(array(
+        'user_id',
+        'gatepass_type',
+        'from_date',
+        'from_time',
+        'to_date',
+        'to_time',
+        'purpose',
+        'destination',
+        'destination_contact',
+        'visit_to',
+        'send_approval_to',
+    ));
+
+    //Creating a response array
+    $response = array();
+
+    //reading post parameters
+    $gatepass_data = $app->request->post();
+
+    //Creating a DbOperation object
+    $db = new DbOperation();
+
+    
+    $res = $db->ApplyGatepass($gatepass_data);
+
+    if (isset($preApply)) {
+        $response['error'] = false;
+        $response['data'] = $preApply;
+    }
+
+    else {
+        $response['error'] = false;
+        $response['message'] = "Invalid student";
+    }
+
+
+    //Displaying the response
+    echoResponse(200,$response);
+});
 
 $app->get('/student/:user_id', 'authenticateStudent', function($user_id) use ($app){
     //verifying required parameters

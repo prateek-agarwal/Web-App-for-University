@@ -145,13 +145,13 @@ class DbOperation
                 $user_id = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
         
-                $result['blackListed'] = $this->isBlackListed($user_id);
+                $result['black_listed'] = $this->isBlackListed($user_id);
                 
                 $status = $this->getStudentStatus($user_id);
                 if ($status == 'A' || $status == 'a')
                     $result['checked_out'] = true;
                 else
-                    $result['checked_out'] = false;
+                    $result['checked_out'] = FALSE;
                 
                 $result['warden_list'] = $this->getWardenList();
 
@@ -171,25 +171,178 @@ class DbOperation
         return NULL;
     }
 
+    public function ApplyGatepass($data) {
+        if ($this->isBlackListed($data['user_id'] == true))
+            return 1; // 1 - Means student is black listed and can't apply gatepass.
+        $status = $this->getStudentStatus($data['user_id']);
+        if ($status == 'A')
+            return 2; // 2 - Student is not in college, can't apply
+        if ($this->hasAlreadyApplied($data['user_id'], $data['from_date'], $data['from_time'], $data['to_date'], $data['to_time']) == TRUE)
+            return 3;
+
+        if ($data['gatepass_type'] == 1) {
+            // LOCAL FIXED
+            // Check if limit reached or not
+            $used = $this->getStudentWeekUse($data['user_id']);
+            $limit = $this->weekLimit();
+            $left = $limit - $used;
+            if ($left <= 0)
+                return 4;
+            // Get all data for applying
+            $fixed_details = $this->getFixedDetails();
+            // if $left > 0 then apply gatepass as auto approved
+            $time = time();
+            $insert_data = array(
+                'user_id' => $data['user_id'],
+                'gatepass_type' => 1,
+                'from_date' => date('Y-m-d'),
+                'from_time' => $fixed_details['Out Time']['value'],
+                'to_date' => date('Y-m-d'),
+                'to_time' => $fixed_details['In Time']['value'],
+                'applied_date' => date('Y-m-d'),
+                'applied_time' => date('H:i:s', $time),
+                'send_approval_to' => $this->getCheifWarden(),
+                'status' => "AutoApproved",
+                'approved_or_rejected_date' => "0000-00-00",
+                'approved_or_rejected_time' => "00:00:00",
+                'actual_out_date' => "0000-00-00",
+                'actual_out_time' => "00-00-00",
+                'actual_in_date' => "0000-00-00",
+                'actual_in_time' => "00-00-00",
+                'purpose' => "Local Visit",
+                'destination' => "NEEMRANA",
+                'visit_to' => "NEEMRANA",
+                'comments' => "NA"
+            );
+
+            /* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+            $a_params = array();
+            $param_type = 'sissssssssssssssssss';
+            $n = 20;
+            
+            $sql = "INSERT INTO gps_gatepassmaster (user_id, gatepass_type, from_date, from_time, to_date, to_time, applied_date, applied_time, send_approval_to, status, approved_or_rejected_date, approved_or_rejected_time, actual_out_date, actual_out_time, actual_in_date, actual_in_time, purpose,destination,visit_to,comments) VALUES ("
+                '$insert_data['user_id']',
+            '$insert_data['gatepass_type']',
+                '$insert_data['from_date']',
+                '$insert_data['from_time']',
+                '$insert_data['to_date']',
+                '$insert_data['to_time']',
+                '$insert_data['applied_date']',
+                '$insert_data['applied_time']',
+                '$insert_data['send_approval_to']',
+                '$insert_data['status']',
+                '$insert_data['approved_or_rejected_date']',
+                '$insert_data['approved_or_rejected_time']',
+                '$insert_data['actual_out_date']',
+                '$insert_data['actual_out_time']',
+                '$insert_data['actual_in_date']',
+                '$insert_data['actual_in_time']',
+                '$insert_data['purpose']',
+                '$insert_data['destination']',
+                '$insert_data['visit_to']',
+                '$insert_data['comments']', 
+                
+                /*Prepare statement */
+            $stmt = $this->con->prepare($sql);
+            /*$stmt->bind_param("sissssssssssssssssss", 
+                $insert_data['user_id'],
+                $insert_data['gatepass_type'],
+                $insert_data['from_date'],
+                $insert_data['from_time'],
+                $insert_data['to_date'],
+                $insert_data['to_time'],
+                $insert_data['applied_date'],
+                $insert_data['applied_time'],
+                $insert_data['send_approval_to'],
+                $insert_data['status'],
+                $insert_data['approved_or_rejected_date'],
+                $insert_data['approved_or_rejected_time'],
+                $insert_data['actual_out_date'],
+                $insert_data['actual_out_time'],
+                $insert_data['actual_in_date'],
+                $insert_data['actual_in_time'],
+                $insert_data['purpose'],
+                $insert_data['destination'],
+                $insert_data['visit_to'],
+                $insert_data['comments']
+                );
+                */
+            /* use call_user_func_array, as $stmt->bind_param('s', $param); does not accept params array */
+            // call_user_func_array(array($stmt, 'bind_param'), $a_params);
+            
+            /* Execute statement */
+            $stmt->execute();
+            
+            /* Fetch result to array */
+            $res = $stmt->get_result();
+            while($row = $res->fetch_array()) {
+                return 0;
+            }
+
+            return 5;
+            
+        }
+    }
+
+    private function weekLimit() {
+        $stmt = $this->con->prepare("SELECT * FROM gps_configmaster WHERE param_id = 1");
+        $stmt->execute();
+        $res = $stmt->get_result();
+        
+        while($row = $res->fetch_assoc()) {
+            $limit = $row['value'];
+            $stmt->close();
+            return $limit;
+        }
+    }
+
+    private function getStudentWeekUse($user_id) {
+        $range = $this->getWeekRange();
+        $stmt = $this->con->prepare("SELECT count(*) as total FROM gps_gatepassmaster WHERE gatepass_type = 1 AND user_id = ? AND (applied_date BETWEEN ? and ?)");
+        $stmt->bind_param("sss", $user_id, $range[0], $range[1]);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        while($row = $res->fetch_assoc()) {
+            return $row['total'];
+        }
+
+        return $res[0]->total;
+    }
+
     private function isBlackListed($user_id) {
         // Black listed 
-        
+        $current_date = date('Y-m-d');
+        $current_time = date('H:i:s');
+
         $stmt = $this->con->prepare("SELECT * FROM gps_blacklist_students WHERE user_id=?");
-        $stmt->bind_param("s", $user_id[0]);
+        $stmt->bind_param("s", $user_id);
         $stmt->execute();
-        $stmt->store_result();
-            //Getting the result
-        $num_rows = $stmt->num_rows;
-        //closing the statment
+        $res = $stmt->get_result();
+        
+        if ($res->num_rows == 0) {
+            $stmt->close();
+            return FALSE;
+        }
+
+        while($row = $res->fetch_assoc()) {
+            $date = $row->to_date;
+            $time = $row->to_time;
+
+            if (strtotime($date." ".$time) > strtotime($current_date." ".$current_time)) {
+                $stmt->close();
+                return TRUE;
+            }
+        }
+        // TODO Add blacklisted group check
+
         $stmt->close();
-        //If the result value is greater than 0 means user found in the database with given username and password
-        //So returning true
-        return $num_rows>0;
+        return FALSE;
     }
 
     private function getStudentStatus($user_id) {
         $stmt = $this->con->prepare("SELECT status FROM gps_usersmaster WHERE user_id=?");
-        $stmt->bind_param("s", $user_id[0]);
+        $stmt->bind_param("s", $user_id);
         $stmt->execute();
         $res = $stmt->get_result();
         $status = $res->fetch_assoc();
@@ -216,30 +369,110 @@ class DbOperation
         return $wardens;
     }
  
-    private function isOnAutoApproval($user_id) {
+    private function isOnAutoApproval($user_id, $from_date, $from_time, $to_date, $to_time) {
         
-        // TODO
-        /*
-        // Get group and sub group id.
-        $stmt = $this->con->prepare("SELECT group_id, subgroup_id FROM gps_usersmaster WHERE user_id=?");
-        $stmt->bind_param("s", $user_id);
+        $current_date = data('Y-m-d');
+        $current_time = date('H:i:s');
+        $group_id = $this->getGroupId($user_id);
+        $subgroup_id = $this->getSubGroupId($user_id);
+        
+        $stmt = $this->con->prepare("SELECT * FROM gps_autoapprove WHERE group_id=? and subgroup_id=?");
+        $stmt->bind_param("ss", $group_id, $subgroup_id);
         $stmt->execute();
         $res = $stmt->get_result();
-        $Group = $res->fetch_assoc();
-        $stmt->close();
-    
-        $stmt = $this->con->prepare("SELECT * FROM gps_autoapprove WHERE group_id=? and subgroup_id=? and from_date <= ? and ? <= to_date");
-        $stmt->bind_param("s", $user_id);
-        $stmt->execute();
-        $res = $stmt->get_result();
-        $status = $res->fetch_assoc();
-        $stmt->close();
+        // $status = $res->fetch_assoc();
+        $rows = $res->num_rows;
 
-        */
-        //returning the status
-        return false;
+        if ($rows == 0) {
+            $stmt->close();
+            return FALSE;
+        }
+
+        $i = 0;
+        while($row = $res->fetch_assoc()) {
+            if (strtotime($from_date." ".$from_time) > strtotime($row->from_date." ".$row->from_time)) {
+                if (strtotime($to_date." ".$to_time) < strtotime($row->to_date." ".$row->to_time)) {
+                    $stmt->close();
+                    return TRUE;
+                }
+            }
+        }
+
+        $stmt->close();
+        return FALSE;
     }
 
+    private function hasAlreadyApplied($user_id, $from_date, $from_time, $to_date, $to_time) {
+        
+        $stmt = $this->con->prepare("SELECT * FROM gps_gatepassmaster WHERE user_id=? and status NOT IN ('Cancelled' , 'Rejected') ORDER BY applied_date DESC LIMIT 5");
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        // $status = $res->fetch_assoc();
+        $rows = $res->num_rows;
+
+        if ($rows == 0) {
+            $stmt->close();
+            return FALSE;
+        }
+
+        $i = 0;
+        while($row = $res->fetch_assoc()) {
+            if (strtotime($from_date." ".$from_time) <= strtotime($row->from_date." ".$row->from_time)) {
+                if (strtotime($to_date." ".$to_time) >= strtotime($row->to_date." ".$row->to_time)) {
+                    $stmt->close();
+                    return TRUE;
+                }
+            }
+        }
+
+        $stmt->close();
+        return FALSE;
+        
+    }
+
+    private function getGroupId($user_id) {
+        $stmt = $this->con->prepare("SELECT group_id FROM gps_usersmaster WHERE user_id=?");
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $group_id = $res->fetch_assoc();
+        $stmt->close();
+        
+        return $group_id[0];
+    }
+
+    private function getSubGroupId($user_id) {
+        $stmt = $this->con->prepare("SELECT subgroup_id FROM gps_usersmaster WHERE user_id=?");
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $subgroup_id = $res->fetch_assoc();
+        $stmt->close();
+        
+        return $subgroup_id[0];
+    }
+    
+    private function getCheifWarden()
+    {
+        /*
+        $u = "select * from gps_usersmaster
+        where role_id = 3
+        limit 1";
+        $q = $this->db->query($u);
+        return $q->result[0]->name;
+
+        $stmt = $this->con->prepare("SELECT * FROM gps_gps_usersmaster WHERE role_id = 3 LIMIT 1");
+        $stmt->execute();
+        $res = $stmt->get_result();
+        $warden = $res->fetch_assoc();
+        $stmt->close();
+        //returning the status
+        return $warden[0]['name'];
+        */
+
+        return 'Kumar Vishal';
+    }
     private function getFixedDetails() {
         
         $stmt = $this->con->prepare("SELECT * FROM gps_configmaster");
@@ -252,6 +485,14 @@ class DbOperation
         //returning the status
         return $details;
     }
+
+    public function getWeekRange() {
+        $date = date("Y-m-d");
+        $ts = strtotime($date);
+        $start = (date('w', $ts) == 1) ? $ts : strtotime('last monday', $ts);
+        return  array(date('Y-m-d', $start),
+                   date('Y-m-d', strtotime('next sunday', $start)));
+  	}
 
     //Checking whether a student already exist
     private function isStudentExists($email_id) {

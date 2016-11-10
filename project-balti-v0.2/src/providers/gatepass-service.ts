@@ -8,6 +8,7 @@ import 'rxjs/add/operator/catch';
 
 import { Student } from '../classes/student';
 
+import { GatepassPreApply } from '../classes/gatepass-pre-apply';
 /*
   Generated class for the GatepassService provider.
 
@@ -72,9 +73,15 @@ export class GatepassService {
 
     this.body = "email_id=" + email_id;
     return this.http.post(request_url, this.body, options)
-                    .map(this.extractData).
+                    .map(this.extractPreApply).
                     catch(this.handleError);
   }
+
+private extractPreApply(res: Response) {
+      let body = res.json();
+      console.log("Body here returned:", JSON.stringify(body));
+      return body.data as GatepassPreApply || { };
+    }
 
   private extractData(res: Response) {
       let body = res.json();

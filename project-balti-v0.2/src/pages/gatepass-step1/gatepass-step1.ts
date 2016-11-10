@@ -5,7 +5,7 @@ import { Student } from '../../classes/student';
 import { GatepassService } from '../../providers/gatepass-service';
 import { LocalGatepass } from '../local-gatepass/local-gatepass';
 import { OutstationGatepass } from '../outstation-gatepass/outstation-gatepass';
-
+import { GatepassPreApply } from '../../classes/gatepass-pre-apply';
 
 /*
   Generated class for the GatepassStep1 page.
@@ -19,7 +19,7 @@ import { OutstationGatepass } from '../outstation-gatepass/outstation-gatepass';
 })
 export class GatepassStep1 {
   student: Student;
-  gatepass: Gatepass;
+  gatepassPreApply: GatepassPreApply;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public gatepassService: GatepassService) {
     this.student = navParams.get('student');
@@ -29,7 +29,13 @@ export class GatepassStep1 {
     console.log('Hello GatepassStep1 Page');
 
     // Call a getPreAplly, to get all details weather gatepass can be applied or not.
-    this.gatepassService.getPreApply();
+    this.gatepassService.getPreApply(this.student.email_id, this.student.api_key)
+      .subscribe(data => {
+        this.gatepassPreApply = data;
+        console.log("Data I got pre gatepass: ", this.gatepassPreApply);
+      }
+      // TODO add error handling.
+    );
   }
 
   localGatepass() {
@@ -38,14 +44,14 @@ export class GatepassStep1 {
 
     this.navCtrl.push(LocalGatepass, {
       student: this.student,
-      gatepass: this.gatepass
+      gatepassPreApply: this.gatepassPreApply
     });
   }
 
   outstationGatepass() {
     this.navCtrl.push(OutstationGatepass, {
       student: this.student,
-      gatepass: this.gatepass
+      gatepassPreApply: this.gatepassPreApply
     });
   }
 
