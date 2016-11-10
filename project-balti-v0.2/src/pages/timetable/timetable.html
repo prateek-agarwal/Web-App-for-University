@@ -1,18 +1,15 @@
-<!--
-  Generated template for the Timetable page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
+    <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Timetable</ion-title>
+    <ion-title>TimeTable</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-
-</ion-content>
+ <ion-card *ngFor = "let i of lists" (click)="goToOtherPage(i)">
+   <div class="front" [style.backgroundColor] = "i.bgcolor"></div>
+   <div class="content">{{i.id}} <ion-badge item-right>{{i.nclass}}</ion-badge></div>
+ </ion-card>
+ </ion-content>

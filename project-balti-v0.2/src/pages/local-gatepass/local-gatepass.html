@@ -1,22 +1,18 @@
-<!--
-  Generated template for the LocalGatepass page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-  <ion-navbar>
+    <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Local-Gatepass</ion-title>
+    <ion-title>Local Gatepass</ion-title>
   </ion-navbar>
 </ion-header>
-<ion-content padding>
-  <button ion-button (click)="fixedTiming()"> FIXED TIMING </button>
-  <br>
-  <hr>
-  <br>
-  <button ion-button (click)="variableTiming()"> VARIABLE TIMING </button>
 
+<ion-content padding>
+<button ion-button block outline large id="localbtn" (click)="fixedTiming()">
+ Fixed time
+</button>
+  <h1 class="ORtext">OR</h1>
+<button ion-button block outline large id="outbtn" (click)="variableTiming()">
+  Variable time
+</button>
 </ion-content>

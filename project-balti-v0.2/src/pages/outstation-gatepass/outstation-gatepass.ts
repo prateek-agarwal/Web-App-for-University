@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 
 /*
   Generated class for the OutstationGatepass page.
@@ -13,7 +13,17 @@ import { NavController } from 'ionic-angular';
 })
 export class OutstationGatepass {
 
-  constructor(public navCtrl: NavController) {}
+   public event = {
+    depdate: '19-02-1990',
+    outtime: '05:00',
+    arrivedate: '19-02-1990',
+    intime: '07:00',
+  }
+  public visitto = {
+    // something to be added , currently no idea
+
+  }
+  constructor(public navCtrl: NavController, public alerCtrl: AlertController) {}
 
   ionViewDidLoad() {
     console.log('Hello OutstationGatepass Page');
@@ -22,5 +32,16 @@ export class OutstationGatepass {
   apply() {
     // Move to final page with all the data.
   }
+public warden = {
+    // something to be added , currently no idea
 
+  }
+  doAlert() {
+    let alert = this.alerCtrl.create({
+      title: 'Request Send',
+      message: 'Bon Voyage!',
+      buttons: ['Ok']
+    });
+    alert.present()
+}
 }

@@ -1,5 +1,5 @@
-page-timetable {
-.front{
+page-attendance {
+   .front{
     height:50px;
     width:5px;
     }
@@ -9,10 +9,12 @@ page-timetable {
     }
   .content {
     position: absolute;
-    top: 36%;
+    top: 25%;
     font-size: 15px;
     width: 100%;
-    /*color: #01A9DB;*/
     color: #B12A30;
+    }
+    .attd{
+    color:black;
     }
 }

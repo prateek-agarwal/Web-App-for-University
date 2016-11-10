@@ -13,8 +13,10 @@ import { LocalGatepass } from '../pages/local-gatepass/local-gatepass';
 import { OutstationGatepass } from '../pages/outstation-gatepass/outstation-gatepass';
 import { GatepassFinal } from '../pages/gatepass-final/gatepass-final';
 import { VariableTiming } from '../pages/variable-timing/variable-timing';
-
-
+import { TimetableDetails } from '../pages/timetable-details/timetable-details';
+import { FixedTiming } from '../pages/fixed-timing/fixed-timing';
+import { Attendance } from '../pages/attendance/attendance';
+import { LibraryHome } from '../pages/library-home/library-home';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,11 @@ import { VariableTiming } from '../pages/variable-timing/variable-timing';
     LocalGatepass,
     OutstationGatepass,
     GatepassFinal,
-    VariableTiming
+    VariableTiming,
+    TimetableDetails,
+    FixedTiming,
+    Attendance,
+    LibraryHome
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -45,7 +51,11 @@ import { VariableTiming } from '../pages/variable-timing/variable-timing';
     LocalGatepass,
     OutstationGatepass,
     GatepassFinal,
-    VariableTiming
+    VariableTiming,
+    TimetableDetails,
+    FixedTiming,
+    Attendance,
+    LibraryHome
   ],
   providers: [UserService, GatepassService]
 })

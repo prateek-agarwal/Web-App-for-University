@@ -6,6 +6,8 @@ import { UserService } from '../providers/user-service';
 import { Login } from '../pages/login/login';
 import { GatepassHome } from '../pages/gatepass-home/gatepass-home';
 import { Timetable } from '../pages/timetable/timetable';
+import { Attendance } from '../pages/attendance/attendance';
+import { LibraryHome } from '../pages/library-home/library-home';
 
 @Component({
   templateUrl: 'app.html'
@@ -34,9 +36,11 @@ export class MyApp {
 
       );
       this.pages = [
-        { title: 'Gatepass', component: GatepassHome },
-        { title: 'Timetable', component: Timetable },
-      ];
+      { title: 'Timetable', component: Timetable },
+      { title: 'Gatepass', component: GatepassHome },
+      { title: 'Attendance', component: Attendance },
+      { title: 'Library', component: LibraryHome }
+    ];
         // this.navCtrl.push(Login);
 
       StatusBar.styleDefault();
