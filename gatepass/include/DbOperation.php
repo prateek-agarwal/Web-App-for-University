@@ -201,7 +201,7 @@ class DbOperation
                 'to_time' => $fixed_details['In Time']['value'],
                 'applied_date' => date('Y-m-d'),
                 'applied_time' => date('H:i:s', $time),
-                'send_approval_to' => $this->getCheifWarden(),
+                'send_approval_to' =>"Kumar Vishal",
                 'status' => "AutoApproved",
                 'approved_or_rejected_date' => "0000-00-00",
                 'approved_or_rejected_time' => "00:00:00",
@@ -220,31 +220,14 @@ class DbOperation
             $param_type = 'sissssssssssssssssss';
             $n = 20;
             
-            $sql = "INSERT INTO gps_gatepassmaster (user_id, gatepass_type, from_date, from_time, to_date, to_time, applied_date, applied_time, send_approval_to, status, approved_or_rejected_date, approved_or_rejected_time, actual_out_date, actual_out_time, actual_in_date, actual_in_time, purpose,destination,visit_to,comments) VALUES ("
-                '$insert_data['user_id']',
-            '$insert_data['gatepass_type']',
-                '$insert_data['from_date']',
-                '$insert_data['from_time']',
-                '$insert_data['to_date']',
-                '$insert_data['to_time']',
-                '$insert_data['applied_date']',
-                '$insert_data['applied_time']',
-                '$insert_data['send_approval_to']',
-                '$insert_data['status']',
-                '$insert_data['approved_or_rejected_date']',
-                '$insert_data['approved_or_rejected_time']',
-                '$insert_data['actual_out_date']',
-                '$insert_data['actual_out_time']',
-                '$insert_data['actual_in_date']',
-                '$insert_data['actual_in_time']',
-                '$insert_data['purpose']',
-                '$insert_data['destination']',
-                '$insert_data['visit_to']',
-                '$insert_data['comments']', 
-                
-                /*Prepare statement */
+            $sql = "INSERT INTO gps_gatepassmaster (user_id, gatepass_type, 
+            from_date, from_time, to_date, to_time, applied_date, applied_time, 
+            send_approval_to, status, approved_or_rejected_date, approved_or_rejected_time, 
+            actual_out_date, actual_out_time, actual_in_date, actual_in_time, 
+            purpose,destination,visit_to,comments) VALUES (?,
+            ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
             $stmt = $this->con->prepare($sql);
-            /*$stmt->bind_param("sissssssssssssssssss", 
+            $stmt->bind_param("sissssssssssssssssss", 
                 $insert_data['user_id'],
                 $insert_data['gatepass_type'],
                 $insert_data['from_date'],
@@ -266,7 +249,7 @@ class DbOperation
                 $insert_data['visit_to'],
                 $insert_data['comments']
                 );
-                */
+                
             /* use call_user_func_array, as $stmt->bind_param('s', $param); does not accept params array */
             // call_user_func_array(array($stmt, 'bind_param'), $a_params);
             
