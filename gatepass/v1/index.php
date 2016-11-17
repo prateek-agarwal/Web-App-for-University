@@ -526,7 +526,7 @@ $app->put('/applyOutstationGatepass', function() use($app){
                         $gatepass_details['destination'] = $gatepass_data['destination'];
                         $gatepass_details['visit_to'] = $gatepass_data['visit_to'];
                         $gatepass_details['comments'] = "NA";
-                        $gatepass_details['destination_contact'] = intval($gatepass_data['destination_contact']);
+                        $gatepass_details['destination_contact'] = $gatepass_data['destination_contact'];
                         
                         // Apply the gatepass
                         $res = $db->ApplyGatepass($gatepass_details);

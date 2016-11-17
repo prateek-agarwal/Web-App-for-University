@@ -56,7 +56,7 @@ class DbOperation
             send_approval_to, status,purpose,destination, destination_contact, visit_to,comments) VALUES (?,
             ?,?,?,?,?,?,?,?,?,?,?,?,?,?)"; 
             $stmt = $this->con->prepare($sql);
-            $stmt->bind_param("sissssssssssiss", 
+            $stmt->bind_param("sisssssssssssss", 
                 $data['user_id'],
                 $data['gatepass_type'],
                 $data['from_date'],
