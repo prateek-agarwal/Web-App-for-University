@@ -35,7 +35,7 @@ class DbOperation
                                      FROM issues LEFT JOIN borrowers ON borrowers.borrowernumber=issues.borrowernumber 
                                      LEFT JOIN items ON issues.itemnumber=items.itemnumber 
                                      LEFT JOIN biblio ON items.biblionumber=biblio.biblionumber 
-                                     WHERE issues.branchcode='A' AND borrowers.borrowernumber=?
+                                     WHERE issues.branchcode='A' AND borrowers.borrowernumber=? AND issues.returndate IS NULL
                                      ");
         $stmt->bind_param("i",$var); 
         $stmt->execute();
@@ -67,12 +67,26 @@ class DbOperation
         $stmt->bind_param("i",$temp['borrowernumber']);
         $stmt->execute();
         $Fine = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
         return $Fine;
  
     }
     
+    
+     public function getBook($keyword)
+     {
 
+        $stmt = $this->con->prepare("SELECT * FROM biblio
+                                    LEFT JOIN biblioitems on (biblioitems.biblionumber = biblio.biblionumber)
+                                    WHERE  biblio.title LIKE CONCAT('%', ?, '%')
+                                    ");
+        $stmt->bind_param("s",$keyword);
+        $stmt->execute();
+        $book = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        return $book;
+    }
 
+}
 
-
-
+?>

@@ -80,22 +80,17 @@ function verifyRequiredParams($required_fields)
     }
 }
 
-
+//Api for getting issued book on the name if user/student
 
 $app->get('/getIssuedBookDetails/:userid', function($userid) use ($app){
 
     $db = new DbOperation();
 
-    //Creating a response array
     $response = array();
 
-    //If username password is correct
     if(true){
 
-        //Getting user detail
         $items = $db->getIssuedBookDetails($userid);
-
-        // $result = $items->get_result()->fetch_assoc();
     
         $response = array();
         $response['data'] = array();
@@ -111,60 +106,79 @@ $app->get('/getIssuedBookDetails/:userid', function($userid) use ($app){
         );  
 
         }
-       
-
-        //Generating response
-       // $response['error'] = false;
-
-        //$response['username'] = $student['username'];
-        //$response['apikey'] = $student['api_key'];
 
     }else{
-        //Generating response
+       
         $response['error'] = true;
         $response['message'] = "Invalid api key";
     }
 
-    //Displaying the response
     echoResponse(200,$response);
 });
 
 
-
+//API for getting the fine owed by the students.
 
 $app->get('/getFine/:userid', function($userid) use ($app){
    
     $db = new DbOperation();
-
-    //Creating a response array
     $response = array();
 
-    //If username password is correct
     if(true){
 
-        //Getting user detail
         $varb = $db->getFine($userid);
 
-        //Generating response
+       if($varb['total owed'] == NULL)
+            $varb['total owed'] = 0.0;
+        
+
         $response['error'] = false;
         $response['data'] = array(
 
           'Enrollment Number'=> $varb['cardnumber'],
           'Fine Owed'=> $varb['total owed']
         );
-        //$response['username'] = $student['username'];
-        //$response['apikey'] = $student['api_key'];
-
+       
     }else{
-        //Generating response
+
         $response['error'] = true;
-        $response['message'] = "Invalid api key";
+        $response['message'] = "Api call went wrong";
     }
 
-    //Displaying the response
     echoResponse(200,$response);
 });
 
+
+//API for getting the search book details
+
+$app->get('/getBook/:keyword', function($keyword) use ($app){
+   
+    $db = new DbOperation();
+
+    $response = array();
+
+    if(true){
+
+        $var = $db->getBook($keyword);
+
+        $response['error'] = false;
+        $response['data'] = array(
+
+          'Title' => $var['title'],
+          'Author' => $var['author'],
+          'ISBN' => $var['isbn'],
+          'Publication Year' => $var['publicationyear'],
+          'Edition' => $var['editionstatement']
+        );
+
+    }else{
+       
+        $response['error'] = true;
+        $response['message'] = "Api call went wrong";
+    }
+
+    echoResponse(200,$response);
+});
 
 $app->run();
 ?>
