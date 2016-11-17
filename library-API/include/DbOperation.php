@@ -35,7 +35,7 @@ class DbOperation
                                      FROM issues LEFT JOIN borrowers ON borrowers.borrowernumber=issues.borrowernumber 
                                      LEFT JOIN items ON issues.itemnumber=items.itemnumber 
                                      LEFT JOIN biblio ON items.biblionumber=biblio.biblionumber 
-                                     WHERE issues.branchcode='A' AND borrowers.borrowernumber=? AND issues.returndate IS NULL
+                                     WHERE borrowers.borrowernumber=? AND issues.returndate IS NULL
                                      ");
         $stmt->bind_param("i",$var); 
         $stmt->execute();
