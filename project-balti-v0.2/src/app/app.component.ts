@@ -9,6 +9,8 @@ import { Timetable } from '../pages/timetable/timetable';
 import { Attendance } from '../pages/attendance/attendance';
 import { LibraryHome } from '../pages/library-home/library-home';
 
+import * as firebase from 'firebase'
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -22,6 +24,17 @@ export class MyApp {
   constructor(platform: Platform,
     public userservice: UserService,
     public menu: MenuController) {
+
+      // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBPl7wIywNW2wmC2DRUVjMQrI6JOO00dJQ",
+    authDomain: "projectbalti-b213a.firebaseapp.com",
+    databaseURL: "https://projectbalti-b213a.firebaseio.com",
+    storageBucket: "projectbalti-b213a.appspot.com",
+    messagingSenderId: "887118421869"
+  };
+  firebase.initializeApp(config);
+
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
