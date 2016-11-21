@@ -26,14 +26,14 @@ export class Login2 {
     private userService: UserService
     ) {
 
-   // this.email_id = navParams.get('email_id');
+    this.email_id = navParams.get('email_id');
   }
 
   ionViewDidLoad() {
       console.log('Hello Login2 Page');
 
   }
-/*
+
   signInUser() {
     if (this.password == '')
       return;
@@ -52,5 +52,5 @@ export class Login2 {
 
     this.navCtrl.setRoot(Timetable);
   }
-*/
+
 }

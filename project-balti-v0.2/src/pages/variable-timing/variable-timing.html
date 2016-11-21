@@ -7,35 +7,39 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding *ngIf="gatepass">
+<ion-content padding>
   <ion-list>
 
-    <ion-item>
-      <ion-label floating>Purpose of Visit</ion-label>
-      <ion-input type="text" [(ngModel)]="gatepass.purpose"></ion-input>
-    </ion-item>
+  <ion-item>
+    <ion-label floating>Purpose of Visit</ion-label>
+    <ion-input type="text"></ion-input>
+  </ion-item>
 
-    <ion-item>
-        <ion-label>Out-Time</ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="gatepass.from_time"></ion-datetime>
-    </ion-item>
+  <ion-item>
+      <ion-label>Out-Time</ion-label>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="event.outtime"></ion-datetime>
+  </ion-item>
 
-    <ion-item>
-        <ion-label>In-Time</ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="gatepass.to_time"></ion-datetime>
-    </ion-item>
+ <ion-item>
+      <ion-label>In-Time</ion-label>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="event.intime"></ion-datetime>
+  </ion-item>
 
-      <ion-item>
-        <ion-label>Send Approval to ?</ion-label>
-        <ion-select [(ngModel)]="gatepass.send_approval_to">
-          <ion-option *ngFor="let name of wardens" value = {{name}}>{{name}}</ion-option>
-        </ion-select>
-      </ion-item>
+  <ion-item>
+    <ion-label>Send Approval to ?</ion-label>
+    <ion-select [(ngModel)]="warden">
+      <ion-option value="as">Abhinav.Sharma</ion-option>
+      <ion-option value="dr">Dhirendra.Rathore</ion-option>
+      <ion-option value="kr">Kamala.Rawat</ion-option>
+      <ion-option value="sm">Supratim.Mitra</ion-option>
+      <ion-option value="gm">G.Maradana</ion-option>
+      <ion-option value="lk">Lokesh.Kumar</ion-option>
+    </ion-select>
+  </ion-item>
+</ion-list>
 
-  </ion-list>
-
-  <button ion-button block outline large (click)="applyGatepass()">
-  Send
-  </button>
+<button ion-button block outline large (click)="doAlert()">
+ Send
+</button>
 
 </ion-content>

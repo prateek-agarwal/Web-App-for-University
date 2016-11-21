@@ -1,5 +1,5 @@
 export class Gatepass {
-  public gatepass_type: number;
+  public gatepass_type;
   public from_date;
   public from_time;
   public to_date;
@@ -22,6 +22,11 @@ export class Gatepass {
   public check_in_by;
   public actual_in_date;
   public actual_in_time;
+
+
+  public getApplyDetails() {
+    // Gets all the data before applying a gatepass.
+  }
 }
 
 // TODO Add more data if needed.
