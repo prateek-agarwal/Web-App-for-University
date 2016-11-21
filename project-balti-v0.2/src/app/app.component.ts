@@ -53,8 +53,7 @@ export class MyApp {
       { title: 'Timetable', component: Timetable },
       { title: 'Gatepass', component: GatepassHome },
       { title: 'Attendance', component: Attendance },
-      { title: 'LibraryHome', component: LibraryHome },
-      {title: 'LibrarySearch', component: LibrarySearch}
+      { title: 'LibraryHome', component: LibraryHome }
     ];
         // this.navCtrl.push(Login);
 

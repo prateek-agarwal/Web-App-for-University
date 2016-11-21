@@ -20,9 +20,9 @@ export class LibraryHome {
 
     private student : any;
     public keyword : any;
-    public library : any;
+    public issueDetail : any;
+    public fine : any;
 
-  
   constructor(public navCtrl: NavController,
     private userservice: UserService,
     public libraryService: LibraryService) {
@@ -40,16 +40,16 @@ export class LibraryHome {
         this.libraryService.getIssuedBookDetails(this.student.enrollment_no)
         .subscribe(
           data => {
-            this.library = data;
-            console.log("Library Book_Detail Object: ",JSON.stringify(this.library));
+            this.issueDetail = data;
+            console.log("Library Book_Detail Object: ",JSON.stringify(this.issueDetail));
           }
         );
 
         this.libraryService.getFine(this.student.enrollment_no)
         .subscribe(
           data => {
-            this.library = data;
-            console.log("Library Fine_object: ",JSON.stringify(this.library));
+            this.fine = data;
+            console.log("Library Fine_object: ",JSON.stringify(this.fine));
           }
         );
 
@@ -62,8 +62,8 @@ export class LibraryHome {
       error => console.log('Error reading data'));
   }
   searchBook(event: any){
-    
-    let keyword = event.target.value;
+
+    this.keyword = event.target.value;
     this.navCtrl.push(LibrarySearch, {
       keyword : this.keyword
     });

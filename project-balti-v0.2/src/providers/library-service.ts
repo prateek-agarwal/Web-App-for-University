@@ -27,37 +27,29 @@ export class LibraryService {
   }
   getIssuedBookDetails(enrollment_no:string): Observable<any>{
 
-    let request_url = this.url + '/getIssuedBookDetails';
-    console.log('Enrollment Number: ', enrollment_no);
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    let options = new RequestOptions({ headers: headers });
+    let request_url = this.url + '/getIssuedBookDetails/' + enrollment_no;
 
-    this.body = "Enrollment_Number=" + enrollment_no;
     return this.http.get(request_url)
                     .map(this.extractData)
-                    catch(this.handleError);
+                    .catch(this.handleError);
   }
+
   getFine(enrollment_no: string): Observable<any>{
 
-    let request_url = this.url + '/getFine';
+    let request_url = this.url + '/getFine/' + enrollment_no;
     console.log('Enrollment Number: ', enrollment_no);
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    let options = new RequestOptions({ headers: headers });
-    this.body = "Enrollment_Number=" + enrollment_no;
     return this.http.get(request_url)
                     .map(this.extractData)
-                    catch(this.handleError); 
+                    .catch(this.handleError);
   }
+
   getBook(keyword: string): Observable<any>{
 
-    let request_url = this.url + '/getBook';
+    let request_url = this.url + '/getBook/' + keyword;
     console.log('Book Searched with keyword as: ', keyword);
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
-    let options = new RequestOptions({ headers: headers });
-    this.body = "Book Searched with keyword as=" + keyword;
     return this.http.get(request_url)
                     .map(this.extractData)
-                    catch(this.handleError); 
+                    .catch(this.handleError);
   }
 
   private extractData(res: Response) {

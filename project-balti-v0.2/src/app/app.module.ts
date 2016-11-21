@@ -18,6 +18,7 @@ import { FixedTiming } from '../pages/fixed-timing/fixed-timing';
 import { Attendance } from '../pages/attendance/attendance';
 import { LibraryHome } from '../pages/library-home/library-home';
 import { LibrarySearch } from '../pages/library-search/library-search';
+import { LibraryService } from '../providers/library-service';
 
 @NgModule({
   declarations: [
