@@ -4,7 +4,7 @@ import { Gatepass } from '../../classes/gatepass';
 import { Login } from '../login/login';
 import { UserService } from '../../providers/user-service';
 import { LibraryService } from '../../providers/library-service';
-import { LibrarySearch } from '../pages/library-search';
+import { LibrarySearch } from '../library-search/library-search';
 /*
   Generated class for the LibraryHome page.
 
