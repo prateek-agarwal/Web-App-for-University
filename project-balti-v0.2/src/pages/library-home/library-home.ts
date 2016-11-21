@@ -1,10 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { Gatepass } from '../../classes/gatepass';
-import { Login } from '../login/login';
-import { UserService } from '../../providers/user-service';
-import { LibraryService } from '../../providers/library-service';
-import { LibrarySearch } from '../pages/library-search';
+
 /*
   Generated class for the LibraryHome page.
 
@@ -15,58 +11,20 @@ import { LibrarySearch } from '../pages/library-search';
   selector: 'page-library-home',
   templateUrl: 'library-home.html'
 })
-
 export class LibraryHome {
-
-    private student : any;
-    public keyword : any;
-    public library : any;
-
-  
-  constructor(public navCtrl: NavController,
-    private userservice: UserService,
-    public libraryService: LibraryService) {
-
-    }
+  public book = {
+    bookname1:'Operating System Concepts',
+    issueddate1:'8/11/16',
+    duedate1:'15/11/16',
+    bookname2:'Digital Logic Circuits',
+    issueddate2:'8/11/16',
+    duedate2:'15/11/16',
+    fine: '300Rs'
+  }
+  constructor(public navCtrl: NavController) {}
 
   ionViewDidLoad() {
     console.log('Hello LibraryHome Page');
-
-    this.userservice.getUser().then(s => {
-      if(s != null){
-        this.student = s;
-        console.log('This is the class', JSON.stringify(this.student));
-
-        this.libraryService.getIssuedBookDetails(this.student.enrollment_no)
-        .subscribe(
-          data => {
-            this.library = data;
-            console.log("Library Book_Detail Object: ",JSON.stringify(this.library));
-          }
-        );
-
-        this.libraryService.getFine(this.student.enrollment_no)
-        .subscribe(
-          data => {
-            this.library = data;
-            console.log("Library Fine_object: ",JSON.stringify(this.library));
-          }
-        );
-
-      }
-      else{
-        this.navCtrl.setRoot(Login);
-      }
-
-    },
-      error => console.log('Error reading data'));
-  }
-  searchBook(event: any){
-    
-    let keyword = event.target.value;
-    this.navCtrl.push(LibrarySearch, {
-      keyword : this.keyword
-    });
   }
 
 }

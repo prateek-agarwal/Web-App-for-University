@@ -17,7 +17,6 @@ import { TimetableDetails } from '../pages/timetable-details/timetable-details';
 import { FixedTiming } from '../pages/fixed-timing/fixed-timing';
 import { Attendance } from '../pages/attendance/attendance';
 import { LibraryHome } from '../pages/library-home/library-home';
-import { LibrarySearch } from '../pages/library-search/library-search';
 
 @NgModule({
   declarations: [
@@ -35,8 +34,7 @@ import { LibrarySearch } from '../pages/library-search/library-search';
     TimetableDetails,
     FixedTiming,
     Attendance,
-    LibraryHome,
-    LibrarySearch
+    LibraryHome
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -57,9 +55,8 @@ import { LibrarySearch } from '../pages/library-search/library-search';
     TimetableDetails,
     FixedTiming,
     Attendance,
-    LibraryHome,
-    LibrarySearch
+    LibraryHome
   ],
-  providers: [UserService, GatepassService, LibraryService]
+  providers: [UserService, GatepassService]
 })
 export class AppModule {}

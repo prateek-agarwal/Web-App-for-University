@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { Gatepass } from '../../classes/gatepass';
 import { Student } from '../../classes/student';
-
+import { GatepassPreApply } from '../../classes/gatepass-pre-apply';
+import { GatepassService } from '../../providers/gatepass-service';
+import { GatepassHome } from '../gatepass-home/gatepass-home';
 
 /*
   Generated class for the GatepassFinal page.
@@ -17,9 +19,12 @@ import { Student } from '../../classes/student';
 export class GatepassFinal {
   student: Student;
   gatepass: Gatepass;
+  gatepassPreApply: GatepassPreApply;
+  msg: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gatepassService: GatepassService) {
     this.student = navParams.get("student");
+    this.gatepassPreApply = navParams.get("gatepassPreApply");
     this.gatepass = navParams.get("gatepass");
   }
 
@@ -28,7 +33,17 @@ export class GatepassFinal {
   }
 
   sendGatepassRequest() {
-    this.student.applyGatepass(this.gatepass);
+    console.log(JSON.stringify(this.gatepass));
+    this.gatepassService.applyGatepass(this.gatepass, this.student.enrollment_no)
+      .subscribe(
+        data => {
+          this.msg = data.message;
+          console.log(JSON.stringify(data));
+          this.navCtrl.setRoot(GatepassHome);
+        },
+        error => console.log(error));
+
+        // Do error handling
   }
 
 }
