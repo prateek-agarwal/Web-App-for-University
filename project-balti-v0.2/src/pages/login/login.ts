@@ -25,25 +25,30 @@ export class Login {
     console.log('Hello Login Page');
 
   }
-  // public validateUser() {
-  //   if (this.email_id == '')
-  //     return;
-  //   this.gatepassService.checkUser(this.email_id)
-  //     .subscribe(
-  //       data => this.nextStep(data),
-  //       error => this.msg = <any>error
-  //     );
-  // }
 
-  // private nextStep(data: any) {
-  //   console.log('Got it now!!!');
+  public validateUser() {
+    if (this.email_id == '')
+      return;
+    this.gatepassService.checkUser(this.email_id)
+      .subscribe(
+        data => this.nextStep(data),
+        error => this.msg = <any>error
+      );
+      /*.then(data => {
+        this.nextStep(data)
+      }, error => this.msg = "Sorry, Invalid User");
+      */
+  }
 
-  //   // TODO error checking weather the email_id is correct or not
-  //   this.msg = data['message'];
+  private nextStep(data: any) {
+    console.log('Got it now!!!');
 
-  //   this.navCtrl.push(Login2, {
-  //       email_id: this.email_id
-  //   });
-  // }
+    // TODO error checking weather the email_id is correct or not
+    this.msg = data['message'];
+
+    this.navCtrl.push(Login2, {
+        email_id: this.email_id
+    });
+  }
 
 }

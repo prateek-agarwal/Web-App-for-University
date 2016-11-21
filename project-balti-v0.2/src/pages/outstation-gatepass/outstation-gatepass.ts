@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, NavParams } from 'ionic-angular';
-import { Gatepass } from '../../classes/gatepass';
-import { Student } from '../../classes/student';
-import { GatepassPreApply } from '../../classes/gatepass-pre-apply';
-import { GatepassFinal } from '../gatepass-final/gatepass-final';
+import { NavController, AlertController } from 'ionic-angular';
 
 /*
   Generated class for the OutstationGatepass page.
@@ -17,29 +13,35 @@ import { GatepassFinal } from '../gatepass-final/gatepass-final';
 })
 export class OutstationGatepass {
 
-  student: Student;
-  gatepass: Gatepass;
-  gatepassPreApply: GatepassPreApply;
-  public wardens;
-
-  constructor(public navCtrl: NavController, public alerCtrl: AlertController, public navParams: NavParams) {
-    this.student = navParams.get("student");
-    this.gatepassPreApply = navParams.get("gatepassPreApply");
-    this.wardens = this.gatepassPreApply.warden_list;
-    this.gatepass = new Gatepass();
+   public event = {
+    depdate: '19-02-1990',
+    outtime: '05:00',
+    arrivedate: '19-02-1990',
+    intime: '07:00',
   }
+  public visitto = {
+    // something to be added , currently no idea
+
+  }
+  constructor(public navCtrl: NavController, public alerCtrl: AlertController) {}
 
   ionViewDidLoad() {
     console.log('Hello OutstationGatepass Page');
   }
 
- applyGatepass() {
-    this.gatepass.gatepass_type = 3;
-
-    this.navCtrl.push(GatepassFinal, {
-      student: this.student,
-      gatepassPreApply: this.gatepassPreApply,
-      gatepass: this.gatepass
-    });
+  apply() {
+    // Move to final page with all the data.
   }
+public warden = {
+    // something to be added , currently no idea
+
+  }
+  doAlert() {
+    let alert = this.alerCtrl.create({
+      title: 'Request Send',
+      message: 'Bon Voyage!',
+      buttons: ['Ok']
+    });
+    alert.present()
+}
 }

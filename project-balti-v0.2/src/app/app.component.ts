@@ -8,6 +8,7 @@ import { GatepassHome } from '../pages/gatepass-home/gatepass-home';
 import { Timetable } from '../pages/timetable/timetable';
 import { Attendance } from '../pages/attendance/attendance';
 import { LibraryHome } from '../pages/library-home/library-home';
+import { LibrarySearch } from '../pages/library-search/library-search';
 
 import * as firebase from 'firebase'
 
@@ -52,7 +53,8 @@ export class MyApp {
       { title: 'Timetable', component: Timetable },
       { title: 'Gatepass', component: GatepassHome },
       { title: 'Attendance', component: Attendance },
-      { title: 'Library', component: LibraryHome }
+      { title: 'LibraryHome', component: LibraryHome },
+      {title: 'LibrarySearch', component: LibrarySearch}
     ];
         // this.navCtrl.push(Login);
 

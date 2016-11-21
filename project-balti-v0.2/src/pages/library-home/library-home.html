@@ -8,8 +8,11 @@
 </ion-header>
 
 <ion-content padding>
+ <ion-toolbar primary >
+    <ion-searchbar (ionInput)="searchBook($event)" autocorrect="off" aria-placeholder="Search Book">
+    </ion-searchbar>
+  </ion-toolbar>
 
-<ion-searchbar></ion-searchbar>
     <ion-card>
       <ion-card-header class="white-text">{{book.bookname1}}</ion-card-header>
       <ion-card-content>
