@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { Gatepass } from '../../classes/gatepass';
 import { Student } from '../../classes/student';
+import { GatepassPreApply } from '../../classes/gatepass-pre-apply';
+import { GatepassFinal } from '../gatepass-final/gatepass-final';
 
 /*
   Generated class for the VariableTiming page.
@@ -16,30 +18,29 @@ import { Student } from '../../classes/student';
 export class VariableTiming {
   student: Student;
   gatepass: Gatepass;
-public warden = {
-    // something to be added , currently no idea
+  gatepassPreApply: GatepassPreApply;
 
-  }
-  public event = {
-    outtime: '05:00',
-    intime: '07:00',
-  }
+  public wardens;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, public alerCtrl: AlertController) {
     this.student = navParams.get("student");
+    this.gatepassPreApply = navParams.get("gatepassPreApply");
+    this.wardens = this.gatepassPreApply.warden_list;
     this.gatepass = navParams.get("gatepass");
   }
 
   ionViewDidLoad() {
     console.log('Hello VariableTiming Page');
+
   }
 
+  applyGatepass() {
+    this.gatepass.gatepass_type = 2;
 
-doAlert() {
-    let alert = this.alerCtrl.create({
-      title: 'Request Send',
-      message: 'Bon Voyage!',
-      buttons: ['Ok']
+    this.navCtrl.push(GatepassFinal, {
+      student: this.student,
+      gatepassPreApply: this.gatepassPreApply,
+      gatepass: this.gatepass
     });
-    alert.present()
-}
+  }
 }

@@ -39,7 +39,7 @@ export class GatepassHome {
           this.student = s;
           console.log('This is the class', JSON.stringify(this.student));
 
-          this.gatepassService.checkStatus(this.student.email_id, this.student.api_key)
+          this.gatepassService.checkStatus(this.student.enrollment_no)
           .subscribe(
             data => {
               this.gatepass = data;
@@ -51,7 +51,7 @@ export class GatepassHome {
         }
         else {
           // Navigate back to login page.
-          // TODO
+
           this.navCtrl.setRoot(Login);
         }
       },

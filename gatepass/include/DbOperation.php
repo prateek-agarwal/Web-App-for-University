@@ -205,7 +205,7 @@ class DbOperation
             // output data of each row
             $i = 0;
             while($row = $res->fetch_assoc()) {
-                $wardens[$i++] = $row;
+                $wardens[$i++] = $row['name'];
             }
         }
 

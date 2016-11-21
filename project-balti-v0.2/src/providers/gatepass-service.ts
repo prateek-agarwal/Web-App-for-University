@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/catch';
 
-import { Student } from '../classes/student';
+import { Gatepass } from '../classes/gatepass';
 
 import { GatepassPreApply } from '../classes/gatepass-pre-apply';
 /*
@@ -23,7 +23,7 @@ export class GatepassService {
   constructor(public http: Http) {
     console.log('Hello GatepassService Provider');
   }
-
+/*
   checkUser (email_id: string): Observable<any> {
 
     let request_url = this.url + '/student';
@@ -36,7 +36,9 @@ export class GatepassService {
                     .map(this.extractData).
                     catch(this.handleError);
   }
+*/
 
+/* // Get Student
   loginUser (email_id: string, password: string): Observable<any> {
 
     let request_url = this.url + '/getAPIKey';
@@ -49,39 +51,94 @@ export class GatepassService {
     return this.http.post(request_url, this.body, options)
                    .map(this.extractData).
                    catch(this.handleError);
-
   }
+*/
 
-  checkStatus(email_id: string, api_key: string): Observable<any> {
+  checkStatus(user_id: string): Observable<any> {
     let request_url = this.url + '/checkStatus';
 
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'authorization': api_key });
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded'});
     let options = new RequestOptions({ headers: headers });
 
-    this.body = "email_id=" + email_id;
+    this.body = "user_id=" + user_id;
     return this.http.post(request_url, this.body, options)
                     .map(this.extractData).
                     catch(this.handleError);
-
   }
 
-  getPreApply(email_id: string, api_key: string): Observable<any> {
+  getPreApply(user_id: string): Observable<any> {
     let request_url = this.url + '/getPreApply';
 
-    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'authorization': api_key });
+    let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded'});
     let options = new RequestOptions({ headers: headers });
 
-    this.body = "email_id=" + email_id;
+    this.body = "user_id=" + user_id;
     return this.http.post(request_url, this.body, options)
                     .map(this.extractPreApply).
                     catch(this.handleError);
   }
 
-private extractPreApply(res: Response) {
-      let body = res.json();
-      console.log("Body here returned:", JSON.stringify(body));
-      return body.data as GatepassPreApply || { };
+  private extractPreApply(res: Response) {
+    let body = res.json();
+    console.log("Body here returned:", JSON.stringify(body));
+    return body.data as GatepassPreApply || { };
+  }
+
+  applyGatepass(gatepass: Gatepass, user_id: string) {
+    if (gatepass.gatepass_type == 1) {
+      // Local fixed gatepass
+      let request_url = this.url + '/applyLocalFixedGatepass';
+
+      let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      let options = new RequestOptions({ headers: headers });
+
+      this.body = "user_id=" + user_id;
+      return this.http.put(request_url, this.body, options)
+        .map(this.extractData).
+        catch(this.handleError);
     }
+
+    else if (gatepass.gatepass_type == 2) {
+      // Local flexible gatepass
+      let request_url = this.url + '/applyLocalFlexibleGatepass';
+
+      let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      let options = new RequestOptions({ headers: headers });
+
+      this.body = "user_id=" + user_id +
+                  "&purpose=" + gatepass.purpose +
+                  "&from_time=" + gatepass.from_time +
+                  "&to_time=" + gatepass.to_time +
+                  "&send_approval_to=" + gatepass.send_approval_to;
+
+      return this.http.put(request_url, this.body, options)
+        .map(this.extractData).
+        catch(this.handleError);
+    }
+
+    else if (gatepass.gatepass_type == 3) {
+      // Outstation gatepass
+      let request_url = this.url + '/applyOutstationGatepass';
+
+      let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      let options = new RequestOptions({ headers: headers });
+
+      this.body = "user_id=" + user_id +
+                  "&purpose=" + gatepass.purpose +
+                  "&destination=" + gatepass.destination +
+                  "&destination_contact=" + gatepass.destination_contact +
+                  "&from_date=" + gatepass.from_date +
+                  "&from_time=" + gatepass.from_time +
+                  "&to_date=" + gatepass.to_date +
+                  "&to_time=" + gatepass.to_time +
+                  "&visit_to=" + gatepass.visit_to +
+                  "&send_approval_to=" + gatepass.send_approval_to;
+
+      return this.http.put(request_url, this.body, options)
+        .map(this.extractData).
+        catch(this.handleError);
+    }
+  }
 
   private extractData(res: Response) {
       let body = res.json();
@@ -100,6 +157,7 @@ private extractPreApply(res: Response) {
     } else {
       errMsg = error.message ? error.message : error.toString();
     }
+    console.log(errMsg);
     return Observable.throw(errMsg);
   }
 }

@@ -14,5 +14,8 @@
 </ion-header>
 
 <ion-content padding>
-
+  <button ion-button (click)="sendGatepassRequest()"> Confirm and Apply </button>
+  <br>
+  <hr>
+  <p *ngIf="msg"> {{msg}}</p>
 </ion-content>

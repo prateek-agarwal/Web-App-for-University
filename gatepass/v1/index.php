@@ -186,7 +186,9 @@ $app->post('/getPreApply', function () use ($app) {
         $fixed_details = $db->getFixedDetails();
         $g_meta['from_time'] = $fixed_details['Out Time']['value'];
         $g_meta['to_time'] = $fixed_details['In Time']['value'];
-                    
+        
+        $g_meta['warden_list'] = $db->getWardenList();
+
         $used = $db->getStudentWeekUse($user_id);
         $limit = $db->weekLimit();
         $left = $limit - $used;

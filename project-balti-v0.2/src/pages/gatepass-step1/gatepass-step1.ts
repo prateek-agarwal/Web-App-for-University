@@ -29,7 +29,7 @@ export class GatepassStep1 {
     console.log('Hello GatepassStep1 Page');
 
     // Call a getPreAplly, to get all details weather gatepass can be applied or not.
-    this.gatepassService.getPreApply(this.student.email_id, this.student.api_key)
+    this.gatepassService.getPreApply(this.student.enrollment_no)
       .subscribe(data => {
         this.gatepassPreApply = data;
         console.log("Data I got pre gatepass: ", this.gatepassPreApply);
